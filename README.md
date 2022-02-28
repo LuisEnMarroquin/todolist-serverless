@@ -4,7 +4,7 @@ TypeScript (ts) offers type safety which is helpful when working with the AWS SD
 
 ## user
 
-Create user `tasklist-serverless` with `Programmatic access`
+Create user `todolist-serverless` with `Programmatic access`
 
 Go to `Managed policies` and attach `AdministratorAccess`
 

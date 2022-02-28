@@ -1,10 +1,12 @@
-service: tasklist-serverless
+service: todolist-serverless
 frameworkVersion: "3"
 
 provider:
   name: aws
   region: us-east-2
   runtime: nodejs14.x
+  memorySize: 128
+  timeout: 10
   httpApi:
     cors: true
   environment:
@@ -24,8 +26,8 @@ provider:
           Resource: "arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_TABLE_TODO}"
 
 functions:
-  mainList:
-    handler: src/main.list
+  indexList:
+    handler: src/index.list
     events:
       - httpApi:
           path: /
