@@ -1,10 +1,10 @@
 service: tasklist-serverless
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
   region: us-east-2
-  runtime: nodejs16.x
+  runtime: nodejs14.x
   httpApi:
     cors: true
   environment:
@@ -21,7 +21,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_TABLE_TODO}'
+          Resource: "arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_TABLE_TODO}"
 
 functions:
   mainList:
@@ -58,7 +58,7 @@ functions:
 resources:
   Resources:
     TodosDynamoTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain # Keep the table even if the stack is deleted
       Properties:
         AttributeDefinitions:
