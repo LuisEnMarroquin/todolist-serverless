@@ -21,4 +21,4 @@ jobs:
           aws configure set aws_access_key_id "${AWS_KEY}"
           aws configure set aws_secret_access_key "${AWS_SECRET}"
       - name: Deploy to proper stage
-        run: serverless deploy --stage ${GITHUB_REF_NAME}
+        run: npx serverless deploy --stage ${GITHUB_REF_NAME}
