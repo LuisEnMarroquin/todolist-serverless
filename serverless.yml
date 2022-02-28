@@ -57,6 +57,13 @@ functions:
           path: /todos
           method: get
 
+package:
+  patterns:
+    - "!*.md"
+    - "!*.json"
+    - "!*/**.ts"
+    - "!.github/**"
+
 resources:
   Resources:
     TodosDynamoTable:
