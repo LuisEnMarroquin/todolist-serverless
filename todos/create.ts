@@ -6,7 +6,7 @@ import { DynamoDB } from 'aws-sdk'
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
-module.exports.create = (event, context, callback) => {
+module.exports.create = (event: any, context: any, callback: any) => {
   const timestamp = new Date().getTime()
   const data = JSON.parse(event.body)
   if (typeof data.text !== 'string') {

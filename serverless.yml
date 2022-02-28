@@ -1,4 +1,4 @@
-service: serverless-http-typescript-dynamodb
+service: inventario-serverless
 frameworkVersion: '2'
 
 provider:

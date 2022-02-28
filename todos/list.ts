@@ -7,7 +7,7 @@ const params = {
   TableName: process.env.DYNAMODB_TABLE,
 }
 
-module.exports.list = (event, context, callback) => {
+module.exports.list = (event: any, context: any, callback: any) => {
   // fetch all todos from the database
   // For production workloads you should design your tables and indexes so that your applications can use Query instead of Scan.
   dynamoDb.scan(params, (error, result) => {
