@@ -1,13 +1,13 @@
-import { DynamoDB } from 'aws-sdk'
-import { v4 as uuidv4 } from 'uuid'
+import { DynamoDB } from "aws-sdk"
+import { v4 as uuidv4 } from "uuid"
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
 export const create = (event: any, context: any, callback: any) => {
   const timestamp = Date.now()
   const data = JSON.parse(event.body)
-  if (typeof data.text !== 'string') {
-    console.error('Validation Failed')
+  if (typeof data.text !== "string") {
+    console.error("Validation Failed")
     callback(new Error("Couldn't create the todo item."))
     return
   }
@@ -56,7 +56,7 @@ export const read = (event: any, context: any, callback: any) => {
       console.error(error)
       callback(null, {
         statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { "Content-Type": "text/plain" },
         body: "Couldn't fetch the todo item.",
       })
       return
@@ -76,11 +76,11 @@ export const update = (event: any, context: any, callback: any) => {
   const data = JSON.parse(event.body)
 
   // validation
-  if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
-    console.error('Validation Failed')
+  if (typeof data.text !== "string" || typeof data.checked !== "boolean") {
+    console.error("Validation Failed")
     callback(null, {
       statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
+      headers: { "Content-Type": "text/plain" },
       body: "Couldn't update the todo item.",
     })
     return
@@ -92,15 +92,15 @@ export const update = (event: any, context: any, callback: any) => {
       id: event.pathParameters.id,
     },
     ExpressionAttributeNames: {
-      '#todo_text': 'text',
+      "#todo_text": "text",
     },
     ExpressionAttributeValues: {
-      ':text': data.text,
-      ':checked': data.checked,
-      ':updatedAt': timestamp,
+      ":text": data.text,
+      ":checked": data.checked,
+      ":updatedAt": timestamp,
     },
-    UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
-    ReturnValues: 'ALL_NEW',
+    UpdateExpression: "SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt",
+    ReturnValues: "ALL_NEW",
   }
 
   // update the todo in the database
@@ -110,7 +110,7 @@ export const update = (event: any, context: any, callback: any) => {
       console.error(error)
       callback(null, {
         statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { "Content-Type": "text/plain" },
         body: "Couldn't fetch the todo item.",
       })
       return
@@ -137,7 +137,7 @@ export const list = (event: any, context: any, callback: any) => {
       console.error(error)
       callback(null, {
         statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { "Content-Type": "text/plain" },
         body: "Couldn't fetch the todo items.",
       })
       return

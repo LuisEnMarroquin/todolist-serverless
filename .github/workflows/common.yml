@@ -14,11 +14,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: npm ci --no-optional
-      - name: Show current branch
-        run: echo ${GITHUB_REF_NAME}
-      - name: Build javascript files
+      - name: Build JavaScript files
         run: npm run build
       - name: Configure AWS credentials
         run: |
           aws configure set aws_access_key_id "${AWS_KEY}"
           aws configure set aws_secret_access_key "${AWS_SECRET}"
+      - name: Deploy to proper stage
+        run: serverless deploy --stage ${GITHUB_REF_NAME}
