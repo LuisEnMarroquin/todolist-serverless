@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: npm ci --no-optional
+        run: npm ci --no-audit --no-optional --fund=false
       - name: Build JavaScript files
         run: npm run build
       - name: Configure AWS credentials
@@ -23,4 +23,4 @@ jobs:
       - name: Install Serverless CLI
         run: npm install -g serverless
       - name: Deploy to proper stage
-        run: serverless deploy --stage ${GITHUB_REF_NAME}
+        run: serverless deploy --stage "${GITHUB_REF_NAME}"
