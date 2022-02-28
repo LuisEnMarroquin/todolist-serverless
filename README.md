@@ -1,15 +1,3 @@
-<!--
-title: TODO
-description: This example shows your how to create a TypeScript powered HTTP API with DynamoDB.
-layout: Doc
-framework: v1
-platform: AWS
-language: nodeJS
-authorLink: 'https://github.com/QuantumInformation'
-authorName: Nikos
-authorAvatar: 'https://avatars0.githubusercontent.com/u/216566?v=4&s=140'
--->
-
 # Introduction
 
 TypeScript (ts) offers type safety which is helpful when working with the AWS SDK, which comes with ts definitions (d.ts)
@@ -40,6 +28,7 @@ curl -X POST https://XXXXXXX.execute-api.us-east-1.amazonaws.com/todos --data '{
 ```
 
 Example Result:
+
 ```bash
 {"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":false,"updatedAt":1479138570824}%
 ```
@@ -51,6 +40,7 @@ curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/todos
 ```
 
 Example output:
+
 ```bash
 [{"text":"Deploy my first service","id":"ac90feaa11e6-9ede-afdfa051af86","checked":true,"updatedAt":1479139961304},{"text":"Learn Serverless","id":"206793aa11e6-9ede-afdfa051af86","createdAt":1479139943241,"checked":false,"updatedAt":1479139943241}]%
 ```
@@ -63,6 +53,7 @@ curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/todos/<id>
 ```
 
 Example Result:
+
 ```bash
 {"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":false,"updatedAt":1479138570824}%
 ```
@@ -75,6 +66,7 @@ curl -X PUT https://XXXXXXX.execute-api.us-east-1.amazonaws.com/todos/<id> --dat
 ```
 
 Example Result:
+
 ```bash
 {"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":true,"updatedAt":1479138570824}%
 ```

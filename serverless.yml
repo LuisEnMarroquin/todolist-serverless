@@ -1,9 +1,9 @@
-service: serverless-http-api-typescript-dynamodb
+service: serverless-http-typescript-dynamodb
 frameworkVersion: '2'
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs16.x
   lambdaHashingVersion: '20201221'
   environment:
     DYNAMODB_TABLE: ${self:service}-${sls:stage}
@@ -20,7 +20,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: "arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+          Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
 
 functions:
   create:
@@ -29,21 +29,18 @@ functions:
       - httpApi:
           path: /todos
           method: post
-
   list:
     handler: todos/list.list
     events:
       - httpApi:
           path: /todos
           method: get
-
   get:
     handler: todos/get.get
     events:
       - httpApi:
           path: /todos/{id}
           method: get
-
   update:
     handler: todos/update.update
     events:
@@ -58,12 +55,10 @@ resources:
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
-          -
-            AttributeName: id
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          -
-            AttributeName: id
+          - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.DYNAMODB_TABLE}

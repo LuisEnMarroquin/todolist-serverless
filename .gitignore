@@ -1,1 +1,8 @@
+# project dependencies
+node_modules/
+
+# Serverless directories
+.serverless/
+
+# This is a TS project
 *.js

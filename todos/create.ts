@@ -11,7 +11,7 @@ module.exports.create = (event, context, callback) => {
   const data = JSON.parse(event.body)
   if (typeof data.text !== 'string') {
     console.error('Validation Failed')
-    callback(new Error('Couldn\'t create the todo item.'))
+    callback(new Error("Couldn't create the todo item."))
     return
   }
 
@@ -22,8 +22,8 @@ module.exports.create = (event, context, callback) => {
       text: data.text,
       checked: false,
       createdAt: timestamp,
-      updatedAt: timestamp
-    }
+      updatedAt: timestamp,
+    },
   }
 
   // write the todo to the database
@@ -31,14 +31,14 @@ module.exports.create = (event, context, callback) => {
     // handle potential errors
     if (error) {
       console.error(error)
-      callback(new Error('Couldn\'t create the todo item.'))
+      callback(new Error("Couldn't create the todo item."))
       return
     }
 
     // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify(params.Item)
+      body: JSON.stringify(params.Item),
     }
     callback(null, response)
   })
