@@ -1,0 +1,24 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - production
+
+jobs:
+  github:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci --no-optional
+      - name: Show current branch
+        run: echo ${GITHUB_REF_NAME}
+      - name: Build javascript files
+        run: npm run build
+      - name: Configure AWS credentials
+        run: |
+          aws configure set aws_access_key_id "${AWS_KEY}"
+          aws configure set aws_secret_access_key "${AWS_SECRET}"

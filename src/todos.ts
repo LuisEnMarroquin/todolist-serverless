@@ -13,7 +13,7 @@ export const create = (event: any, context: any, callback: any) => {
   }
 
   const params = {
-    TableName: process.env.DYNAMO_TABLE,
+    TableName: process.env.DYNAMO_TABLE_TODO,
     Item: {
       id: uuidv4(),
       text: data.text,
@@ -43,7 +43,7 @@ export const create = (event: any, context: any, callback: any) => {
 
 export const read = (event: any, context: any, callback: any) => {
   const params = {
-    TableName: process.env.DYNAMO_TABLE,
+    TableName: process.env.DYNAMO_TABLE_TODO,
     Key: {
       id: event.pathParameters.id,
     },
@@ -87,7 +87,7 @@ export const update = (event: any, context: any, callback: any) => {
   }
 
   const params = {
-    TableName: process.env.DYNAMO_TABLE,
+    TableName: process.env.DYNAMO_TABLE_TODO,
     Key: {
       id: event.pathParameters.id,
     },
@@ -128,7 +128,7 @@ export const update = (event: any, context: any, callback: any) => {
 export const list = (event: any, context: any, callback: any) => {
   // fetch all todos from the database
   const params = {
-    TableName: process.env.DYNAMO_TABLE,
+    TableName: process.env.DYNAMO_TABLE_TODO,
   }
   // For production workloads you should design your tables and indexes so that your applications can use Query instead of Scan.
   dynamoDb.scan(params, (error, result) => {

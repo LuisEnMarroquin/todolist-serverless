@@ -5,12 +5,13 @@ provider:
   name: aws
   region: us-east-2
   runtime: nodejs16.x
-  environment:
-    DYNAMO_TABLE: ${self:service}-${sls:stage}
   httpApi:
     cors: true
+  environment:
+    DYNAMO_TABLE_TODO: ${self:service}-${sls:stage}-todo
   iam:
     role:
+      name: ${self:service}-${sls:stage}-role
       statements:
         - Effect: Allow
           Action:
@@ -20,9 +21,15 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_TABLE}'
+          Resource: 'arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMO_TABLE_TODO}'
 
 functions:
+  mainList:
+    handler: src/main.list
+    events:
+      - httpApi:
+          path: /
+          method: get
   todosCreate:
     handler: src/todos.create
     events:
@@ -52,7 +59,7 @@ resources:
   Resources:
     TodosDynamoTable:
       Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
+      DeletionPolicy: Retain # Keep the table even if the stack is deleted
       Properties:
         AttributeDefinitions:
           - AttributeName: id
@@ -61,4 +68,4 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.DYNAMO_TABLE}
+        TableName: ${self:provider.environment.DYNAMO_TABLE_TODO}
