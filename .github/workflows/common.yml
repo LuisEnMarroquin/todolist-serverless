@@ -20,5 +20,7 @@ jobs:
         run: |
           aws configure set aws_access_key_id "${AWS_KEY}"
           aws configure set aws_secret_access_key "${AWS_SECRET}"
+      - name: Install Serverless CLI
+        run: npm install -g serverless
       - name: Deploy to proper stage
-        run: npx serverless deploy --stage ${GITHUB_REF_NAME}
+        run: serverless deploy --stage ${GITHUB_REF_NAME}
