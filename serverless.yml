@@ -10,6 +10,7 @@ provider:
   httpApi:
     cors: true
   environment:
+    CURRENT_SLS_STAGE: ${sls:stage}
     DYNAMO_TABLE_TODO: ${self:service}-${sls:stage}-todo
   iam:
     role:
@@ -62,6 +63,7 @@ package:
     - "!*.md"
     - "!*.json"
     - "!*/**.ts"
+    - "!LICENSE"
     - "!.github/**"
 
 resources:

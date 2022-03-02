@@ -1,18 +1,17 @@
-# Introduction
+# ToDoList Serverless
 
-TypeScript (ts) offers type safety which is helpful when working with the AWS SDK, which comes with ts definitions (d.ts)
+AWS Lambda, DynamoDB and Serverless Framework multi environment backend
 
-## user
+## Create a user for Serverless
 
-Create user `todolist-serverless` with `Programmatic access`
+Create user `todolist-serverless` with `Programmatic access`, go to `Managed policies` and attach `AdministratorAccess`
 
-Go to `Managed policies` and attach `AdministratorAccess`
+## Remove a stage from AWS console
 
-## compiling
-
-```shell
-npm run build
-```
+1. Go to `API Gateway` > `Custom domain names` > `API mappings` and remove the stage that you want to remove
+2. Go to `S3` and delete the bucket of that stage: `todolist-serverless-STAGE-serverlessdeploymentbuck-SOMETHING`
+3. Go to `CloudFormation` and delete the stack of the stage that you will delete: `todolist-serverless-STAGE`
+4. Go to `DynamoDB` > `Tables` and remove the table: `todolist-serverless-STAGE-todo` (all data will be lost)
 
 ## Usage
 

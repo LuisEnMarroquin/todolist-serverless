@@ -6,3 +6,8 @@ node_modules/
 
 # This is a TS project
 *.js
+
+# Useless files
+.DS_Store
+.directory
+desktop.ini
