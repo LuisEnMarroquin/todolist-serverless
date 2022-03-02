@@ -2,13 +2,13 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
     "package": "npx serveless package"
   },
   "dependencies": {
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.93",
     "@types/node": "^17.0.21",
     "@types/uuid": "^8.3.4",
     "aws-sdk": "^2.1082.0",

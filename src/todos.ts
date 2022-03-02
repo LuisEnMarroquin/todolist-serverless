@@ -1,11 +1,13 @@
 import { DynamoDB } from "aws-sdk"
 import { v4 as uuidv4 } from "uuid"
+import { APIGatewayProxyHandler } from "aws-lambda"
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
-export const create = (event: any, context: any, callback: any) => {
+export const create: APIGatewayProxyHandler = (event, context, callback) => {
   const timestamp = Date.now()
   const data = JSON.parse(event.body)
+
   if (typeof data.text !== "string") {
     console.error("Validation Failed")
     callback(new Error("Couldn't create the todo item."))
@@ -41,7 +43,7 @@ export const create = (event: any, context: any, callback: any) => {
   })
 }
 
-export const read = (event: any, context: any, callback: any) => {
+export const read: APIGatewayProxyHandler = (event, context, callback) => {
   const params = {
     TableName: process.env.DYNAMO_TABLE_TODO,
     Key: {
@@ -71,7 +73,7 @@ export const read = (event: any, context: any, callback: any) => {
   })
 }
 
-export const update = (event: any, context: any, callback: any) => {
+export const update: APIGatewayProxyHandler = (event, context, callback) => {
   const timestamp = Date.now()
   const data = JSON.parse(event.body)
 
@@ -125,7 +127,7 @@ export const update = (event: any, context: any, callback: any) => {
   })
 }
 
-export const list = (event: any, context: any, callback: any) => {
+export const list: APIGatewayProxyHandler = (event, context, callback) => {
   // fetch all todos from the database
   const params = {
     TableName: process.env.DYNAMO_TABLE_TODO,
