@@ -3,7 +3,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "package": "serveless package"
+    "package": "npx serveless package"
   },
   "dependencies": {
     "uuid": "^8.3.2"

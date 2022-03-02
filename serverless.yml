@@ -60,11 +60,10 @@ functions:
 
 package:
   patterns:
-    - "!*.md"
-    - "!*.json"
-    - "!*/**.ts"
-    - "!LICENSE"
-    - "!.github/**"
+    - "!*/**"
+    - "src/**"
+    - "!src/**.ts"
+    - "node_modules/**"
 
 resources:
   Resources:
