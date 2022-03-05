@@ -7,15 +7,13 @@ const dynamoDb = new DynamoDB.DocumentClient()
 export const create: APIGatewayProxyHandler = (event, context, callback) => {
   try {
     if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+    if (event.body == null) throw new Error("There is no body present in the request that client sent")
 
     const timestamp = Date.now()
-    console.log(`eventBody`, typeof event?.body, event?.body)
-    const data = JSON.parse(event?.body ?? "")
+    const data = JSON.parse(event.body)
 
     if (typeof data.text !== "string") {
-      console.error("Validation Failed")
-      callback(new Error("Couldn't create the todo item."))
-      return
+      throw new Error("Couldn't create the todo item")
     }
 
     const params = {
@@ -35,6 +33,7 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
 
       callback(null, {
         statusCode: 200,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(params.Item),
       })
     })
@@ -51,11 +50,12 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
 export const read: APIGatewayProxyHandler = (event, context, callback) => {
   try {
     if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+    if (event.pathParameters?.id == null) throw new Error("There is no id present in the URL parameter")
 
     const params = {
       TableName: process.env.DYNAMO_TABLE_TODO,
       Key: {
-        id: event?.pathParameters?.id,
+        id: event.pathParameters.id,
       },
     }
 
@@ -65,6 +65,7 @@ export const read: APIGatewayProxyHandler = (event, context, callback) => {
 
       callback(null, {
         statusCode: 200,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(result.Item),
       })
     })
@@ -81,25 +82,21 @@ export const read: APIGatewayProxyHandler = (event, context, callback) => {
 export const update: APIGatewayProxyHandler = (event, context, callback) => {
   try {
     if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+    if (event.body == null) throw new Error("There is no body present in the request that client sent")
+    if (event.pathParameters?.id == null) throw new Error("There is no id present in the URL parameter")
 
     const timestamp = Date.now()
-    const data = JSON.parse(event?.body ?? "")
+    const data = JSON.parse(event.body)
 
     // validation
     if (typeof data.text !== "string" || typeof data.checked !== "boolean") {
-      console.error("Validation Failed")
-      callback(null, {
-        statusCode: 400,
-        headers: { "Content-Type": "text/plain" },
-        body: "Couldn't update the todo item.",
-      })
-      return
+      throw new Error("Couldn't update the todo item")
     }
 
     const params = {
       TableName: process.env.DYNAMO_TABLE_TODO,
       Key: {
-        id: event?.pathParameters?.id,
+        id: event.pathParameters.id,
       },
       ExpressionAttributeNames: {
         "#todo_text": "text",
@@ -119,6 +116,7 @@ export const update: APIGatewayProxyHandler = (event, context, callback) => {
 
       callback(null, {
         statusCode: 200,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(result.Attributes),
       })
     })
@@ -146,6 +144,7 @@ export const list: APIGatewayProxyHandler = (event, context, callback) => {
 
       callback(null, {
         statusCode: 200,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(result.Items),
       })
     })
