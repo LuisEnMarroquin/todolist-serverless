@@ -5,8 +5,10 @@ import { APIGatewayProxyHandler } from "aws-lambda"
 const dynamoDb = new DynamoDB.DocumentClient()
 
 export const create: APIGatewayProxyHandler = (event, context, callback) => {
+  if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+
   const timestamp = Date.now()
-  const data = JSON.parse(event.body)
+  const data = JSON.parse(event?.body ?? "")
 
   if (typeof data.text !== "string") {
     console.error("Validation Failed")
@@ -35,19 +37,20 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
     }
 
     // create a response
-    const response = {
+    callback(null, {
       statusCode: 200,
       body: JSON.stringify(params.Item),
-    }
-    callback(null, response)
+    })
   })
 }
 
 export const read: APIGatewayProxyHandler = (event, context, callback) => {
+  if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+
   const params = {
     TableName: process.env.DYNAMO_TABLE_TODO,
     Key: {
-      id: event.pathParameters.id,
+      id: event?.pathParameters?.id,
     },
   }
 
@@ -65,17 +68,18 @@ export const read: APIGatewayProxyHandler = (event, context, callback) => {
     }
 
     // create a response
-    const response = {
+    callback(null, {
       statusCode: 200,
       body: JSON.stringify(result.Item),
-    }
-    callback(null, response)
+    })
   })
 }
 
 export const update: APIGatewayProxyHandler = (event, context, callback) => {
+  if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+
   const timestamp = Date.now()
-  const data = JSON.parse(event.body)
+  const data = JSON.parse(event?.body ?? "")
 
   // validation
   if (typeof data.text !== "string" || typeof data.checked !== "boolean") {
@@ -91,7 +95,7 @@ export const update: APIGatewayProxyHandler = (event, context, callback) => {
   const params = {
     TableName: process.env.DYNAMO_TABLE_TODO,
     Key: {
-      id: event.pathParameters.id,
+      id: event?.pathParameters?.id,
     },
     ExpressionAttributeNames: {
       "#todo_text": "text",
@@ -119,37 +123,38 @@ export const update: APIGatewayProxyHandler = (event, context, callback) => {
     }
 
     // create a response
-    const response = {
+    callback(null, {
       statusCode: 200,
       body: JSON.stringify(result.Attributes),
-    }
-    callback(null, response)
+    })
   })
 }
 
 export const list: APIGatewayProxyHandler = (event, context, callback) => {
-  // fetch all todos from the database
-  const params = {
-    TableName: process.env.DYNAMO_TABLE_TODO,
-  }
-  // For production workloads you should design your tables and indexes so that your applications can use Query instead of Scan.
-  dynamoDb.scan(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error(error)
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { "Content-Type": "text/plain" },
-        body: "Couldn't fetch the todo items.",
-      })
-      return
+  try {
+    if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+
+    const params = {
+      TableName: process.env.DYNAMO_TABLE_TODO,
     }
 
-    // create a response
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(result.Items),
-    }
-    callback(null, response)
-  })
+    // For production workloads you should design your tables and indexes so that your apps can use Query instead of Scan
+    dynamoDb.scan(params, (error, result) => {
+      // handle potential errors
+      if (error) throw error
+
+      // create a response
+      callback(null, {
+        statusCode: 200,
+        body: JSON.stringify(result.Items),
+      })
+    })
+  } catch (error) {
+    console.error(error)
+    callback(null, {
+      statusCode: error?.statusCode || 501,
+      headers: { "Content-Type": "text/plain" },
+      body: "Couldn't fetch the todo items.",
+    })
+  }
 }
