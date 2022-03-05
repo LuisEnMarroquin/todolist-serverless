@@ -31,6 +31,7 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
     dynamoDb.put(params, (error, result) => {
       if (error) throw error
 
+      console.log("context", context)
       console.log("result", result)
 
       callback(null, {
@@ -42,7 +43,7 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
   } catch (error) {
     console.error(error)
     callback(null, {
-      statusCode: error?.statusCode || 501,
+      statusCode: 400,
       headers: { "Content-Type": "text/plain" },
       body: "Couldn't create the todo item",
     })
@@ -74,7 +75,7 @@ export const read: APIGatewayProxyHandler = (event, context, callback) => {
   } catch (error) {
     console.error(error)
     callback(null, {
-      statusCode: error?.statusCode || 501,
+      statusCode: 400,
       headers: { "Content-Type": "text/plain" },
       body: "Couldn't fetch the todo item",
     })
@@ -90,7 +91,6 @@ export const update: APIGatewayProxyHandler = (event, context, callback) => {
     const timestamp = Date.now()
     const data = JSON.parse(event.body)
 
-    // validation
     if (typeof data.text !== "string" || typeof data.checked !== "boolean") {
       throw new Error("Couldn't update the todo item")
     }
@@ -125,7 +125,7 @@ export const update: APIGatewayProxyHandler = (event, context, callback) => {
   } catch (error) {
     console.error(error)
     callback(null, {
-      statusCode: error?.statusCode || 501,
+      statusCode: 400,
       headers: { "Content-Type": "text/plain" },
       body: "Couldn't fetch the todo item",
     })
@@ -153,7 +153,7 @@ export const list: APIGatewayProxyHandler = (event, context, callback) => {
   } catch (error) {
     console.error(error)
     callback(null, {
-      statusCode: error?.statusCode || 501,
+      statusCode: 400,
       headers: { "Content-Type": "text/plain" },
       body: "Couldn't fetch the todo items",
     })
