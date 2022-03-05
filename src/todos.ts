@@ -31,6 +31,8 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
     dynamoDb.put(params, (error, result) => {
       if (error) throw error
 
+      console.log("result", result)
+
       callback(null, {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
