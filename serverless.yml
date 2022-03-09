@@ -13,6 +13,8 @@ provider:
   environment:
     CURRENT_SLS_STAGE: ${sls:stage}
     DYNAMO_TABLE_TODO: ${self:service}-${sls:stage}-todo
+  deploymentBucket:
+    maxPreviousDeploymentArtifacts: 3
   iam:
     role:
       name: ${self:service}-${sls:stage}-role

@@ -1,10 +1,10 @@
 import { DynamoDB } from "aws-sdk"
 import { v4 as uuidv4 } from "uuid"
-import { APIGatewayProxyHandler, Callback } from "aws-lambda"
+import { APIGatewayProxyHandler, APIGatewayProxyResult, Callback } from "aws-lambda"
 
 const dynamoDb = new DynamoDB.DocumentClient()
 
-const errorHandler = (error: unknown, callback: Callback) => {
+const errorHandler = (error: unknown, callback: Callback<APIGatewayProxyResult>) => {
   console.error(error)
   if (error instanceof Error) {
     callback(null, {
