@@ -9,6 +9,7 @@ provider:
   timeout: 10
   httpApi:
     cors: true
+    disableDefaultEndpoint: true
   environment:
     CURRENT_SLS_STAGE: ${sls:stage}
     DYNAMO_TABLE_TODO: ${self:service}-${sls:stage}-todo
@@ -51,6 +52,12 @@ functions:
       - httpApi:
           path: /todos/{id}
           method: put
+  todosRemove:
+    handler: src/todos.remove
+    events:
+      - httpApi:
+          path: /todos/{id}
+          method: delete
   todosList:
     handler: src/todos.list
     events:

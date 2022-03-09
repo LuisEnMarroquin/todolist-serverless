@@ -1,8 +1,25 @@
 import { DynamoDB } from "aws-sdk"
 import { v4 as uuidv4 } from "uuid"
-import { APIGatewayProxyHandler } from "aws-lambda"
+import { APIGatewayProxyHandler, Callback } from "aws-lambda"
 
 const dynamoDb = new DynamoDB.DocumentClient()
+
+const errorHandler = (error: unknown, callback: Callback) => {
+  console.error(error)
+  if (error instanceof Error) {
+    callback(null, {
+      statusCode: 400,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: error.message }),
+    })
+  } else {
+    callback(null, {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "Internal server error" }),
+    })
+  }
+}
 
 export const create: APIGatewayProxyHandler = (event, context, callback) => {
   try {
@@ -31,9 +48,6 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
     dynamoDb.put(params, (error, result) => {
       if (error) throw error
 
-      console.log("context", context)
-      console.log("result", result)
-
       callback(null, {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
@@ -41,12 +55,7 @@ export const create: APIGatewayProxyHandler = (event, context, callback) => {
       })
     })
   } catch (error) {
-    console.error(error)
-    callback(null, {
-      statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
-      body: "Couldn't create the todo item",
-    })
+    errorHandler(error, callback)
   }
 }
 
@@ -73,12 +82,7 @@ export const read: APIGatewayProxyHandler = (event, context, callback) => {
       })
     })
   } catch (error) {
-    console.error(error)
-    callback(null, {
-      statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
-      body: "Couldn't fetch the todo item",
-    })
+    errorHandler(error, callback)
   }
 }
 
@@ -123,12 +127,34 @@ export const update: APIGatewayProxyHandler = (event, context, callback) => {
       })
     })
   } catch (error) {
-    console.error(error)
-    callback(null, {
-      statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
-      body: "Couldn't fetch the todo item",
+    errorHandler(error, callback)
+  }
+}
+
+export const remove: APIGatewayProxyHandler = (event, context, callback) => {
+  try {
+    if (process.env.DYNAMO_TABLE_TODO === undefined) throw new Error("DYNAMO_TABLE_TODO is undefined")
+    if (event.pathParameters?.id == null) throw new Error("There is no id present in the URL parameter")
+
+    const params = {
+      TableName: process.env.DYNAMO_TABLE_TODO,
+      Key: {
+        id: event.pathParameters.id,
+      },
+    }
+
+    // remove todo from the database
+    dynamoDb.delete(params, (error, result) => {
+      if (error) throw error
+
+      callback(null, {
+        statusCode: 200,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result),
+      })
     })
+  } catch (error) {
+    errorHandler(error, callback)
   }
 }
 
@@ -151,11 +177,6 @@ export const list: APIGatewayProxyHandler = (event, context, callback) => {
       })
     })
   } catch (error) {
-    console.error(error)
-    callback(null, {
-      statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
-      body: "Couldn't fetch the todo items",
-    })
+    errorHandler(error, callback)
   }
 }
